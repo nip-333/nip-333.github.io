@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIP-333: Bitcoin Block Headers over Nostr</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --accent: #f7931a;
+      --muted: #8b949e;
+      --border: #30363d;
+      --card-bg: #161b22;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { color: var(--accent); margin-bottom: 0.5rem; }
+    .subtitle { color: var(--muted); margin-bottom: 2rem; }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .card-label { color: var(--muted); font-size: 0.875rem; }
+    .card-value { font-size: 1.5rem; font-weight: 600; font-family: monospace; }
+    .card-detail { color: var(--muted); font-size: 0.75rem; margin-top: 0.25rem; }
+    .links { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+    .links a {
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .links a:hover { opacity: 0.9; }
+    .links a.secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+    section { margin-bottom: 2rem; }
+    section h2 { color: var(--fg); margin-bottom: 1rem; font-size: 1.25rem; }
+    code {
+      background: var(--card-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    pre {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+    }
+    .updated { color: var(--muted); font-size: 0.875rem; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.875rem; }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <h1>NIP-333</h1>
+  <p class="subtitle">Bitcoin Block Headers over Nostr</p>
+
+  <div class="status-grid">
+    <div class="card">
+      <div class="card-label">Chain Tip</div>
+      <div class="card-value" id="tip">--</div>
+      <div class="card-detail" id="tip-hash"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Archive</div>
+      <div class="card-value" id="archive-headers">--</div>
+      <div class="card-detail" id="archive-detail"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Current Epoch</div>
+      <div class="card-value" id="current-epoch">--</div>
+      <div class="card-detail" id="current-detail"></div>
+    </div>
+  </div>
+
+  <p class="updated">Updated: <span id="updated">--</span></p>
+
+  <div class="links">
+    <a href="spec/nip-333.html">Read Spec</a>
+    <a href="https://github.com/bitcoincc/bitcoin-epochs/releases/latest" class="secondary">Download Archive</a>
+    <a href="https://github.com/bitcoincc/bitcoin-current/releases/latest" class="secondary">Download Current</a>
+  </div>
+
+  <section>
+    <h2>What is NIP-333?</h2>
+    <p>A protocol for distributing Bitcoin block headers over Nostr. Headers are 80-byte cryptographic proofs that enable lightweight clients to verify the Bitcoin blockchain without downloading full blocks.</p>
+  </section>
+
+  <section>
+    <h2>Quick Start</h2>
+    <pre><code>// Subscribe to Bitcoin headers
+["REQ", "headers", {
+  "kinds": [33333],
+  "#d": ["latest"],
+  "#n": ["btc"],
+  "limit": 1
+}]</code></pre>
+  </section>
+
+  <section>
+    <h2>Data Sources</h2>
+    <p>The reference implementation provides header archives via GitHub releases:</p>
+    <ul style="margin-top: 0.5rem; margin-left: 1.5rem; color: var(--muted);">
+      <li><code>btc.archive.bin</code> — All completed epochs (immutable)</li>
+      <li><code>btc.current.bin</code> — Current epoch in progress</li>
+      <li><code>kind:33333</code> — Latest 12 headers via Nostr</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>
+      <a href="https://github.com/nip-333">GitHub</a> ·
+      <a href="spec/nip-333.html">Specification</a> ·
+      <a href="https://github.com/bitcoincc">Reference Implementation</a>
+    </p>
+  </footer>
+
+  <script>
+    async function loadStatus() {
+      try {
+        const res = await fetch('https://api.github.com/repos/bitcoincc/bitcoin-current/releases/latest');
+        const release = await res.json();
+
+        // Parse release body for status info
+        const body = release.body || '';
+        const headersMatch = body.match(/Headers\*\*: ([\d,]+)/);
+        const blocksMatch = body.match(/blocks ([\d-]+)/);
+
+        if (blocksMatch) {
+          const [start, end] = blocksMatch[1].split('-');
+          document.getElementById('tip').textContent = parseInt(end).toLocaleString();
+          document.getElementById('current-epoch').textContent = release.tag_name.replace('v', '');
+          document.getElementById('current-detail').textContent = `${headersMatch ? headersMatch[1] : '?'} headers`;
+        }
+
+        document.getElementById('updated').textContent = new Date(release.published_at).toLocaleString();
+
+        // Fetch archive info
+        const archiveRes = await fetch('https://api.github.com/repos/bitcoincc/bitcoin-epochs/releases/latest');
+        const archiveRelease = await archiveRes.json();
+        const archiveHeaders = archiveRelease.body?.match(/Headers\*\*: ([\d,]+)/);
+        const archiveEpochs = archiveRelease.tag_name?.replace('v', '');
+
+        if (archiveHeaders) {
+          document.getElementById('archive-headers').textContent = archiveHeaders[1];
+          document.getElementById('archive-detail').textContent = `Epochs 0-${archiveEpochs}`;
+        }
+      } catch (e) {
+        console.error('Failed to load status:', e);
+      }
+    }
+    loadStatus();
+  </script>
+</body>
+</html>
