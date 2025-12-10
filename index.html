@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NIP-333: Bitcoin Block Headers over Nostr</title>
   <meta name="description" content="A Nostr protocol for distributing Bitcoin block headers, enabling lightweight SPV clients.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nip-333.github.io/">
+  <meta property="og:title" content="NIP-333: Bitcoin Block Headers over Nostr">
+  <meta property="og:description" content="A standard for distributing Bitcoin block headers over Nostr, enabling lightweight clients to verify the blockchain without running a full node.">
+  <meta property="og:image" content="https://nip-333.github.io/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NIP-333: Bitcoin Block Headers over Nostr">
+  <meta name="twitter:description" content="A standard for distributing Bitcoin block headers over Nostr, enabling lightweight clients to verify the blockchain without running a full node.">
+  <meta name="twitter:image" content="https://nip-333.github.io/og-image.png">
+
   <style>
     :root {
       --bg: #0a0a0a;
@@ -256,6 +270,40 @@
     .code-value { color: #fcd34d; }
     .code-number { color: var(--accent); }
 
+    /* Implementations */
+    .implementations {
+      padding: 4rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .impl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .impl-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .impl-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .impl-name {
+      color: var(--fg);
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .impl-desc {
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
     /* Footer */
     footer {
       padding: 3rem 2rem;
@@ -371,12 +419,27 @@
 }]</code></pre>
   </section>
 
+  <!-- Implementations -->
+  <section class="implementations">
+    <h2 class="section-title">Implementations</h2>
+    <div class="impl-grid">
+      <a href="https://bitcoin.cc" class="impl-card" target="_blank" rel="noopener">
+        <div class="impl-name">bitcoin.cc</div>
+        <div class="impl-desc">SPV wallet and block explorer using NIP-333 headers</div>
+      </a>
+      <a href="https://github.com/bitcoincc" class="impl-card" target="_blank" rel="noopener">
+        <div class="impl-name">bitcoincc</div>
+        <div class="impl-desc">Reference publisher and header archives</div>
+      </a>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <div class="footer-links">
       <a href="spec/">Specification</a>
       <a href="https://github.com/nip-333">GitHub</a>
-      <a href="https://github.com/bitcoincc">Reference Implementation</a>
+      <a href="https://bitcoin.cc">bitcoin.cc</a>
     </div>
     <p>NIP-333 is an open protocol. Build freely.</p>
   </footer>
