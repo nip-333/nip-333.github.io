@@ -114,15 +114,22 @@
       padding: 1.75rem;
     }
     .feature-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
-      border-radius: 8px;
+      width: 48px;
+      height: 48px;
+      background: rgba(247, 147, 26, 0.1);
+      border: 1px solid rgba(247, 147, 26, 0.2);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
-      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.5;
     }
     .feature-card h3 {
       font-size: 1.125rem;
@@ -286,17 +293,23 @@
   <section class="features">
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">80B</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        </div>
         <h3>Compact Headers</h3>
         <p>Each Bitcoin block header is just 80 bytes — the cryptographic proof needed to verify transactions without full blocks.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">33333</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
         <h3>Kind 33333 Events</h3>
         <p>Parameterized replaceable events ensure relays store only the latest headers. Subscribe once, stay synced.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">SPV</div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
         <h3>Light Client Ready</h3>
         <p>Build SPV wallets and apps that verify Bitcoin payments using only headers and merkle proofs.</p>
       </div>
