@@ -136,9 +136,9 @@
     <ul>
       <li><strong>Compact:</strong> twelve 80-byte headers — 960 bytes of proof covering
         roughly two hours of blocks.</li>
-      <li><strong>Replaceable:</strong> parameterized replaceable events
-        (<code>d: latest</code>) mean relays store only the newest version. Subscribe once,
-        stay synced.</li>
+      <li><strong>Replaceable:</strong> parameterized replaceable events, one stream per
+        network (<code>d: btc</code>, <code>d: tbtc4</code>, …) — relays store only the
+        newest version. Subscribe once, stay synced.</li>
       <li><strong>Trustless:</strong> every header is verified on receipt — proof-of-work
         against its own target, each header linking to the previous. This page does exactly
         that, in your browser, before showing you anything.</li>
@@ -151,8 +151,7 @@
     <h2>Subscribe via Nostr</h2>
 <pre><code>["REQ", "headers", {
   "kinds": [33333],
-  "#d": ["latest"],
-  "#n": ["btc"],
+  "#d": ["btc"],
   "limit": 1
 }]</code></pre>
     <p>Networks: <code>btc</code> (mainnet), <code>tbtc3</code> (testnet3),
@@ -253,7 +252,8 @@
         ws.onopen = () => {
           connected++;
           $('relay-pill').textContent = `${connected}/${RELAYS.length} relays`;
-          ws.send(JSON.stringify(['REQ', 'h', { kinds: [33333], '#d': ['latest'], '#n': [net], limit: 1 }]));
+          // '#d': [net] is the spec; 'latest' is the legacy alias during migration
+          ws.send(JSON.stringify(['REQ', 'h', { kinds: [33333], '#d': [net, 'latest'], '#n': [net], limit: 1 }]));
         };
         ws.onclose = () => {
           connected = Math.max(0, connected - 1);
