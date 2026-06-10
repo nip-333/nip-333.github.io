@@ -252,8 +252,7 @@
         ws.onopen = () => {
           connected++;
           $('relay-pill').textContent = `${connected}/${RELAYS.length} relays`;
-          // '#d': [net] is the spec; 'latest' is the legacy alias during migration
-          ws.send(JSON.stringify(['REQ', 'h', { kinds: [33333], '#d': [net, 'latest'], '#n': [net], limit: 1 }]));
+          ws.send(JSON.stringify(['REQ', 'h', { kinds: [33333], '#d': [net], limit: 1 }]));
         };
         ws.onclose = () => {
           connected = Math.max(0, connected - 1);
