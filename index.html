@@ -5,484 +5,283 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NIP-333: Bitcoin Block Headers over Nostr</title>
   <meta name="description" content="A Nostr protocol for distributing Bitcoin block headers, enabling lightweight SPV clients.">
-
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://nip-333.github.io/">
   <meta property="og:title" content="NIP-333: Bitcoin Block Headers over Nostr">
   <meta property="og:description" content="A standard for distributing Bitcoin block headers over Nostr, enabling lightweight clients to verify the blockchain without running a full node.">
   <meta property="og:image" content="https://nip-333.github.io/og-image.png">
-
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="NIP-333: Bitcoin Block Headers over Nostr">
   <meta name="twitter:description" content="A standard for distributing Bitcoin block headers over Nostr, enabling lightweight clients to verify the blockchain without running a full node.">
   <meta name="twitter:image" content="https://nip-333.github.io/og-image.png">
-
   <style>
-    :root {
-      --bg: #0a0a0a;
-      --fg: #e5e5e5;
-      --accent: #f7931a;
-      --accent-dim: #b36a00;
-      --muted: #737373;
-      --border: #262626;
-      --card-bg: #141414;
-      --code-bg: #1a1a1a;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
+      font-family: Georgia, 'Times New Roman', serif;
+      color: #2c2c2c;
+      background: #fafaf8;
       line-height: 1.7;
-      min-height: 100vh;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
     }
 
-    /* Hero */
-    .hero {
-      padding: 6rem 2rem 4rem;
-      text-align: center;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.4rem 1rem;
-      border-radius: 100px;
-      margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--fg) 0%, var(--muted) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-tagline {
-      font-size: 1.25rem;
-      color: var(--muted);
-      max-width: 600px;
-      margin: 0 auto 2.5rem;
-    }
-    .hero-cta {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.875rem 1.75rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: #000;
-    }
-    .btn-primary:hover {
-      background: #ffaa33;
-      transform: translateY(-1px);
-    }
-    .btn-secondary {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--fg);
-    }
-    .btn-secondary:hover {
-      background: var(--border);
-      border-color: var(--muted);
-    }
+    a { color: #1a5276; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    /* Features */
-    .features {
-      padding: 4rem 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .feature-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.75rem;
-    }
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      background: rgba(247, 147, 26, 0.1);
-      border: 1px solid rgba(247, 147, 26, 0.2);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.25rem;
-    }
-    .feature-icon svg {
-      width: 24px;
-      height: 24px;
-      stroke: var(--accent);
-      fill: none;
-      stroke-width: 1.5;
-    }
-    .feature-card h3 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    .feature-card p {
-      color: var(--muted);
-      font-size: 0.9375rem;
-    }
-
-    /* How it Works */
-    .how-it-works {
-      padding: 4rem 2rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      text-align: center;
+    header {
       margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #ddd;
     }
-    .diagram {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.875rem;
-      overflow-x: auto;
-    }
-    .diagram-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .diagram-box {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.75rem 1.25rem;
-      text-align: center;
-    }
-    .diagram-box.highlight {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .diagram-arrow {
-      color: var(--muted);
-    }
-    .diagram-label {
-      color: var(--muted);
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-    }
+    header h1 { font-size: 2rem; font-weight: normal; letter-spacing: 0.02em; margin-bottom: 0.25rem; }
+    header .subtitle { font-size: 1.1rem; color: #666; font-style: italic; }
+    nav { margin-top: 1rem; font-size: 0.95rem; }
+    nav a { margin-right: 1.25rem; }
 
-    /* Live Status */
-    .status {
-      padding: 4rem 2rem;
-      max-width: 800px;
-      margin: 0 auto;
+    section { margin-bottom: 2.5rem; }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: normal;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid #e5e3dd;
     }
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-    @media (max-width: 600px) {
-      .status-grid { grid-template-columns: 1fr; }
-    }
-    .status-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .status-label {
-      color: var(--muted);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-    .status-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      color: var(--accent);
-    }
-    .status-detail {
-      color: var(--muted);
-      font-size: 0.8125rem;
-      margin-top: 0.25rem;
-    }
-    .status-updated {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.8125rem;
-      margin-top: 1.5rem;
-    }
+    p { margin-bottom: 0.9rem; }
+    ul { margin: 0 0 0.9rem 1.4rem; }
+    li { margin-bottom: 0.3rem; }
 
-    /* Code Example */
-    .code-section {
-      padding: 4rem 2rem;
-      max-width: 700px;
-      margin: 0 auto;
+    code, pre {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f0efeb;
+      border-radius: 3px;
     }
+    code { padding: 0.1em 0.35em; font-size: 0.92em; }
     pre {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
+      padding: 1rem;
       overflow-x: auto;
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.875rem;
-      line-height: 1.6;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 0.9rem;
+      border: 1px solid #e5e3dd;
     }
-    .code-comment { color: var(--muted); }
-    .code-key { color: #7dd3fc; }
-    .code-value { color: #fcd34d; }
-    .code-number { color: var(--accent); }
+    pre code { background: none; padding: 0; }
 
-    /* Implementations */
-    .implementations {
-      padding: 4rem 2rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .impl-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-    .impl-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .impl-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-    .impl-name {
-      color: var(--fg);
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    .impl-desc {
-      color: var(--muted);
-      font-size: 0.875rem;
-    }
+    table { border-collapse: collapse; width: 100%; font-size: 0.9rem; margin-bottom: 0.9rem; }
+    th, td { text-align: left; padding: 0.35rem 0.6rem; border-bottom: 1px solid #e5e3dd; }
+    th { color: #666; font-weight: normal; font-style: italic; }
+    td.mono { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; }
 
-    /* Footer */
+    .pill {
+      display: inline-block; font-family: 'Courier New', monospace; font-size: 0.8rem;
+      border: 1px solid #c9c6bd; border-radius: 999px; padding: 0 0.6em; color: #666;
+      background: #f0efeb; margin-left: 0.4em; vertical-align: middle;
+    }
+    .ok { color: #1e7d36; }
+    .bad { color: #a04000; }
+
+    .netbtn {
+      font-family: Georgia, serif; font-size: 0.95rem; cursor: pointer;
+      background: none; border: 1px solid #c9c6bd; border-radius: 4px;
+      padding: 0.2rem 0.9rem; margin-right: 0.5rem; color: #555;
+    }
+    .netbtn.active { background: #1a5276; color: #fafaf8; border-color: #1a5276; }
+
+    #live-meta { font-size: 0.92rem; color: #666; margin-bottom: 0.7rem; }
+    #live-meta .age { font-family: 'Courier New', monospace; }
+
     footer {
-      padding: 3rem 2rem;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.875rem;
+      margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid #ddd;
+      font-size: 0.9rem; color: #888;
     }
-    footer a {
-      color: var(--fg);
-      text-decoration: none;
-      margin: 0 1rem;
-      transition: color 0.2s;
-    }
-    footer a:hover { color: var(--accent); }
-    .footer-links { margin-bottom: 1rem; }
   </style>
 </head>
 <body>
-
-  <!-- Hero -->
-  <section class="hero">
-    <span class="hero-badge">Nostr Protocol</span>
+  <header>
     <h1>NIP-333</h1>
-    <p class="hero-tagline">
-      A standard for distributing Bitcoin block headers over Nostr, enabling lightweight clients to verify the blockchain without running a full node.
-    </p>
-    <div class="hero-cta">
-      <a href="spec/" class="btn btn-primary">Read the Specification</a>
-      <a href="https://github.com/nip-333" class="btn btn-secondary">GitHub</a>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section class="features">
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
-        </div>
-        <h3>Compact Headers</h3>
-        <p>Each Bitcoin block header is just 80 bytes — the cryptographic proof needed to verify transactions without full blocks.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3>Kind 33333 Events</h3>
-        <p>Parameterized replaceable events ensure relays store only the latest headers. Subscribe once, stay synced.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
-        </div>
-        <h3>Light Client Ready</h3>
-        <p>Build SPV wallets and apps that verify Bitcoin payments using only headers and merkle proofs.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- How it Works -->
-  <section class="how-it-works">
-    <h2 class="section-title">How It Works</h2>
-    <div class="diagram">
-      <div class="diagram-row">
-        <div class="diagram-box">Bitcoin Network</div>
-        <span class="diagram-arrow">&rarr;</span>
-        <div class="diagram-box">Publisher</div>
-        <span class="diagram-arrow">&rarr;</span>
-        <div class="diagram-box highlight">Nostr Relays</div>
-        <span class="diagram-arrow">&rarr;</span>
-        <div class="diagram-box">Your App</div>
-      </div>
-      <div style="text-align: center; color: var(--muted); margin-top: 1.5rem;">
-        <div style="margin-bottom: 0.5rem;"><strong style="color: var(--fg);">Archive</strong> &nbsp;(completed epochs) + <strong style="color: var(--fg);">Current</strong> &nbsp;(this epoch) + <strong style="color: var(--accent);">Tip</strong> &nbsp;(latest 12 headers)</div>
-        <div style="font-size: 0.8125rem;">Full header chain in three pieces, all verifiable</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live Status -->
-  <section class="status">
-    <h2 class="section-title">Live Status</h2>
-    <div class="status-grid">
-      <div class="status-card">
-        <div class="status-label">Chain Tip</div>
-        <div class="status-value" id="tip">--</div>
-        <div class="status-detail">block height</div>
-      </div>
-      <div class="status-card">
-        <div class="status-label">Archive</div>
-        <div class="status-value" id="archive-headers">--</div>
-        <div class="status-detail" id="archive-detail">headers</div>
-      </div>
-      <div class="status-card">
-        <div class="status-label">Current Epoch</div>
-        <div class="status-value" id="current-epoch">--</div>
-        <div class="status-detail" id="current-detail">headers</div>
-      </div>
-    </div>
-    <p class="status-updated">Updated: <span id="updated">--</span></p>
-  </section>
-
-  <!-- Code Example -->
-  <section class="code-section">
-    <h2 class="section-title">Subscribe via Nostr</h2>
-    <pre><code><span class="code-comment">// Request the latest Bitcoin headers</span>
-[<span class="code-value">"REQ"</span>, <span class="code-value">"headers"</span>, {
-  <span class="code-key">"kinds"</span>: [<span class="code-number">33333</span>],
-  <span class="code-key">"#d"</span>: [<span class="code-value">"latest"</span>],
-  <span class="code-key">"#n"</span>: [<span class="code-value">"btc"</span>],
-  <span class="code-key">"limit"</span>: <span class="code-number">1</span>
-}]</code></pre>
-  </section>
-
-  <!-- Implementations -->
-  <section class="implementations">
-    <h2 class="section-title">Implementations</h2>
-    <div class="impl-grid">
-      <a href="https://bitcoin.cc" class="impl-card" target="_blank" rel="noopener">
-        <div class="impl-name">bitcoin.cc</div>
-        <div class="impl-desc">SPV wallet and block explorer using NIP-333 headers</div>
-      </a>
-      <a href="https://github.com/nip-333/btc-archive" class="impl-card" target="_blank" rel="noopener">
-        <div class="impl-name">btc-archive</div>
-        <div class="impl-desc">Header archive — all completed epochs</div>
-      </a>
-      <a href="https://github.com/nip-333/btc-current" class="impl-card" target="_blank" rel="noopener">
-        <div class="impl-name">btc-current</div>
-        <div class="impl-desc">Current epoch headers — updated hourly</div>
-      </a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
+    <div class="subtitle">Bitcoin Block Headers over Nostr</div>
+    <nav>
+      <a href="#latest">Latest Headers</a>
+      <a href="#how">How It Works</a>
+      <a href="#subscribe">Subscribe</a>
       <a href="spec/">Specification</a>
       <a href="https://github.com/nip-333">GitHub</a>
-      <a href="https://bitcoin.cc">bitcoin.cc</a>
-    </div>
-    <p>NIP-333 is an open protocol. Build freely.</p>
+    </nav>
+  </header>
+
+  <section>
+    <p><strong>Verify Bitcoin without trusting anyone.</strong> Bitcoin block headers are
+    80-byte cryptographic proofs. NIP-333 defines a single replaceable Nostr event
+    (<code>kind 33333</code>) carrying the latest twelve headers — small enough for any relay,
+    fresh enough for any wallet, and verifiable by anyone: proof-of-work checks itself, so the
+    publisher is a convenience, never an authority.</p>
+  </section>
+
+  <section id="latest">
+    <h2>Latest Headers <span class="pill" id="relay-pill">connecting…</span></h2>
+    <p style="margin-bottom:0.7rem">
+      <button class="netbtn active" data-net="btc">mainnet</button><button class="netbtn" data-net="tbtc4">testnet4</button>
+    </p>
+    <div id="live-meta">subscribing to relays…</div>
+    <table id="live-table" hidden>
+      <thead><tr><th>height</th><th>hash</th><th>time (UTC)</th><th>age</th><th></th></tr></thead>
+      <tbody id="live-rows"></tbody>
+    </table>
+    <p id="live-note" style="font-size:0.85rem;color:#888"></p>
+  </section>
+
+  <section id="how">
+    <h2>How It Works</h2>
+    <ul>
+      <li><strong>Compact:</strong> twelve 80-byte headers — 960 bytes of proof covering
+        roughly two hours of blocks.</li>
+      <li><strong>Replaceable:</strong> parameterized replaceable events
+        (<code>d: latest</code>) mean relays store only the newest version. Subscribe once,
+        stay synced.</li>
+      <li><strong>Trustless:</strong> every header is verified on receipt — proof-of-work
+        against its own target, each header linking to the previous. This page does exactly
+        that, in your browser, before showing you anything.</li>
+      <li><strong>Bootstrap-friendly:</strong> events carry <code>u</code> tags pointing at
+        archive and epoch data sources, so a fresh client can sync the full header chain.</li>
+    </ul>
+  </section>
+
+  <section id="subscribe">
+    <h2>Subscribe via Nostr</h2>
+<pre><code>["REQ", "headers", {
+  "kinds": [33333],
+  "#d": ["latest"],
+  "#n": ["btc"],
+  "limit": 1
+}]</code></pre>
+    <p>Networks: <code>btc</code> (mainnet), <code>tbtc3</code> (testnet3),
+    <code>tbtc4</code> (testnet4). See the <a href="spec/">full specification</a>.</p>
+  </section>
+
+  <section>
+    <h2>Implementations</h2>
+    <ul>
+      <li><a href="https://bitcoin.cc">bitcoin.cc</a> — realtime header dashboard and SPV infrastructure</li>
+      <li><a href="https://github.com/nip-333/btc-archive">btc-archive</a> — full header chain, epoch files</li>
+      <li><a href="https://github.com/nip-333/btc-current">btc-current</a> — current epoch snapshot</li>
+    </ul>
+  </section>
+
+  <footer>
+    NIP-333 · <a href="spec/">specification</a> · <a href="https://github.com/nip-333">github.com/nip-333</a>
   </footer>
 
-  <script>
-    async function loadStatus() {
-      try {
-        const [currentRes, archiveRes] = await Promise.all([
-          fetch('https://api.github.com/repos/bitcoincc/bitcoin-current/releases/latest'),
-          fetch('https://api.github.com/repos/bitcoincc/bitcoin-epochs/releases/latest')
-        ]);
-        const [current, archive] = await Promise.all([currentRes.json(), archiveRes.json()]);
+  <script type="module">
+    // Live headers: subscribe, then VERIFY before display — proof-of-work
+    // against each header's own target, plus the linkage between them.
+    const RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://relay.nostr.band'];
+    const $ = (id) => document.getElementById(id);
 
-        // Parse current epoch
-        const body = current.body || '';
-        const headersMatch = body.match(/Headers\*\*: ([\d,]+)/);
-        const blocksMatch = body.match(/blocks ([\d-]+)/);
+    const hex = (b) => [...b].map((x) => x.toString(16).padStart(2, '0')).join('');
+    const unhex = (s) => Uint8Array.from(s.match(/../g), (x) => parseInt(x, 16));
+    async function sha256d(bytes) {
+      const a = await crypto.subtle.digest('SHA-256', bytes);
+      return new Uint8Array(await crypto.subtle.digest('SHA-256', a));
+    }
+    const u32 = (b, off) => (b[off] | (b[off + 1] << 8) | (b[off + 2] << 16) | (b[off + 3] << 24)) >>> 0;
 
-        if (blocksMatch) {
-          const [start, end] = blocksMatch[1].split('-');
-          document.getElementById('tip').textContent = parseInt(end).toLocaleString();
-          document.getElementById('current-epoch').textContent = current.tag_name.replace('v', '');
-          document.getElementById('current-detail').textContent = `${headersMatch ? headersMatch[1] : '?'} headers`;
-        }
+    async function parseAndVerify(content) {
+      const bytes = unhex(content);
+      if (!bytes || bytes.length % 80 !== 0) throw new Error('bad content length');
+      const headers = [];
+      let prevHash = null;
+      for (let i = 0; i < bytes.length; i += 80) {
+        const raw = bytes.subarray(i, i + 80);
+        const hash = (await sha256d(raw)).reverse();
+        const bits = u32(raw, 72);
+        const exponent = bits >>> 24;
+        const mantissa = BigInt(bits & 0x7fffff);
+        const target = exponent <= 3 ? mantissa >> (8n * BigInt(3 - exponent))
+                                     : mantissa << (8n * BigInt(exponent - 3));
+        const powOk = BigInt('0x' + hex(hash)) <= target;
+        const prevField = hex(Uint8Array.from(raw.subarray(4, 36)).reverse());
+        const linkOk = prevHash === null || prevField === prevHash;
+        headers.push({ hash: hex(hash), time: u32(raw, 68), ok: powOk && linkOk });
+        prevHash = hex(hash);
+      }
+      return headers;
+    }
 
-        // Parse archive
-        const archiveHeaders = archive.body?.match(/Headers\*\*: ([\d,]+)/);
-        const archiveEpochs = archive.tag_name?.replace('v', '');
-        if (archiveHeaders) {
-          document.getElementById('archive-headers').textContent = archiveHeaders[1];
-          document.getElementById('archive-detail').textContent = `epochs 0-${archiveEpochs}`;
-        }
+    const age = (t) => {
+      const s = Math.floor(Date.now() / 1000) - t;
+      if (s < 90) return `${s}s ago`;
+      if (s < 5400) return `${Math.round(s / 60)}m ago`;
+      if (s < 172800) return `${(s / 3600).toFixed(1)}h ago`;
+      return `${(s / 86400).toFixed(1)}d ago`;
+    };
 
-        document.getElementById('updated').textContent = new Date(current.published_at).toLocaleString();
-      } catch (e) {
-        console.error('Failed to load status:', e);
+    let net = 'btc', newest = null, connected = 0, sockets = [];
+
+    function render(tags, headers, createdAt) {
+      const tip = parseInt(tags.tip ?? '0', 10) || null;
+      const allOk = headers.every((h) => h.ok);
+      $('live-meta').innerHTML =
+        `tip <strong>${tip ? tip.toLocaleString() : '?'}</strong>` +
+        ` · published <span class="age">${age(createdAt)}</span>` +
+        ` · ${allOk ? `<span class="ok">✓ all ${headers.length} headers verified (PoW + linkage)</span>`
+                    : '<span class="bad">✗ verification failed</span>'}`;
+      $('live-rows').innerHTML = headers.map((h, i) => {
+        const height = tip ? tip - headers.length + 1 + i : null;
+        return `<tr>
+          <td class="mono">${height ? height.toLocaleString() : ''}</td>
+          <td class="mono">${h.hash.slice(0, 8)}…${h.hash.slice(-16)}</td>
+          <td class="mono">${new Date(h.time * 1000).toISOString().replace('T', ' ').slice(0, 19)}</td>
+          <td class="mono">${age(h.time)}</td>
+          <td>${h.ok ? '<span class="ok">✓</span>' : '<span class="bad">✗</span>'}</td>
+        </tr>`;
+      }).reverse().join('');
+      $('live-table').hidden = false;
+      $('live-note').textContent =
+        'Verified in your browser before display — the publisher is untrusted by design.';
+    }
+
+    function subscribe() {
+      for (const ws of sockets) { try { ws.close(); } catch {} }
+      sockets = []; connected = 0; newest = null;
+      $('live-table').hidden = true;
+      $('live-meta').textContent = 'subscribing to relays…';
+      $('relay-pill').textContent = 'connecting…';
+      for (const url of RELAYS) {
+        const ws = new WebSocket(url);
+        sockets.push(ws);
+        ws.onopen = () => {
+          connected++;
+          $('relay-pill').textContent = `${connected}/${RELAYS.length} relays`;
+          ws.send(JSON.stringify(['REQ', 'h', { kinds: [33333], '#d': ['latest'], '#n': [net], limit: 1 }]));
+        };
+        ws.onclose = () => {
+          connected = Math.max(0, connected - 1);
+          $('relay-pill').textContent = `${connected}/${RELAYS.length} relays`;
+        };
+        ws.onmessage = async (ev) => {
+          const m = JSON.parse(ev.data);
+          if (m[0] !== 'EVENT') return;
+          const e = m[2];
+          if (newest && e.created_at <= newest) return;
+          newest = e.created_at;
+          const tags = Object.fromEntries(e.tags.filter((t) => t.length >= 2));
+          try {
+            render(tags, await parseAndVerify(e.content), e.created_at);
+          } catch (err) {
+            $('live-meta').innerHTML = `<span class="bad">✗ ${err.message}</span>`;
+          }
+        };
       }
     }
-    loadStatus();
+
+    document.querySelectorAll('.netbtn').forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll('.netbtn').forEach((x) => x.classList.remove('active'));
+      b.classList.add('active');
+      net = b.dataset.net;
+      subscribe();
+    }));
+    subscribe();
   </script>
 </body>
 </html>
