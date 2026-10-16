@@ -104,6 +104,7 @@
     <nav>
       <a href="#latest">Latest Headers</a>
       <a href="#how">How It Works</a>
+      <a href="#example">Example</a>
       <a href="#subscribe">Subscribe</a>
       <a href="spec/">Specification</a>
       <a href="https://github.com/nip-333">GitHub</a>
@@ -147,6 +148,28 @@
     </ul>
   </section>
 
+  <section id="example">
+    <h2>Example Event</h2>
+    <p>The event from the <a href="spec/#example-event">specification</a>: one replaceable event per network, the twelve newest
+    headers as 1,920 hex characters of content, and <code>u</code> tags for the archive a fresh client syncs from.</p>
+<pre><code>{
+  "kind": 33333,
+  "pubkey": "cccccccc829b802b7bf52d43edf7cfe62ac89f332a318b6826ac8bd6e73660da",
+  "created_at": 1733356800,
+  "tags": [
+    ["d", "btc"],
+    ["n", "btc"],
+    ["tip", "875011"],
+    ["u", "https://github.com/bitcoincc/bitcoin-epochs/releases/latest/download/btc.archive.bin"],
+    ["u", "https://github.com/bitcoincc/bitcoin-current/releases/latest/download/btc.current.bin"],
+    ["alt", "Bitcoin headers 875000-875011"]
+  ],
+  "content": "00e0ff3f…[1920 hex chars: twelve 80-byte headers]…",
+  "id": "…",
+  "sig": "…"
+}</code></pre>
+  </section>
+
   <section id="subscribe">
     <h2>Subscribe via Nostr</h2>
 <pre><code>["REQ", "headers", {
@@ -168,7 +191,8 @@
   </section>
 
   <footer>
-    NIP-333 · <a href="spec/">specification</a> · <a href="https://github.com/nip-333">github.com/nip-333</a>
+    NIP-333 · <a href="spec/">specification</a> · <a href="https://github.com/nip-333">github.com/nip-333</a><br>
+    Sibling: <a href="https://nip-332.github.io/">NIP-332</a>, assumeUTXO attestations over Nostr · the record at <a href="https://assumeutxo.com/">assumeutxo.com</a>
   </footer>
 
   <script type="module">
