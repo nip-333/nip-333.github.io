@@ -10,6 +10,7 @@ NIP-333 defines a protocol for distributing Bitcoin block headers via Nostr even
 
 - [Read the spec](https://nip-333.github.io/spec/)
 - [nip-333.md](spec/nip-333.md)
+- [On NostrHub](https://nostrhub.io/naddr1qvzqqqrcvypzphn7e50zja4x4ke0lf05mwq60kqjezakdx92qrw0rem2md27l4j9qqwku6ts95enxvedvf5hgcm0d9hz6cnvda3kkttgv4skgetjwv4xwj47), signed by the author
 
 ## Reference Implementation
 
